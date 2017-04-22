@@ -1,0 +1,141 @@
+<html>
+<head>
+  <title>Firebase Chat Example</title>
+  <script type="text/javascript" src="https://cdn.firebase.com/v0/firebase.js"></script>
+  <script type='text/javascript' src='https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js'></script>
+  
+<link rel="stylesheet" type="text/css" href="./design.css">
+</head>
+<body>
+  <h2>CIT chat</h2>
+<img src="citlogo.jpg" alt="my logo" style="width:30px;height:30px;">
+
+
+
+
+
+
+<script type='text/javascript'>
+ 
+window.addEventListener('load', function(){
+ 
+    var box1 = document.getElementById('box1')
+    var statusdiv = document.getElementById('statusdiv')
+    var startx = 0
+    var dist = 0
+ 
+    box1.addEventListener('touchstart', function(e){
+        var touchobj = e.changedTouches[0] // reference first touch point (ie: first finger)
+        startx = parseInt(touchobj.clientX) // get x position of touch point relative to left edge of browser
+        statusdiv.innerHTML = 'Status: touchstart<br> ClientX: ' + startx + 'px'
+        e.preventDefault()
+    }, false)
+ 
+    box1.addEventListener('touchmove', function(e){
+        var touchobj = e.changedTouches[0] // reference first touch point for this event
+        var dist = parseInt(touchobj.clientX) - startx
+        statusdiv.innerHTML = 'Status: touchmove<br> Horizontal distance traveled: ' + dist + 'px'
+        e.preventDefault()
+    }, false)
+ 
+    box1.addEventListener('touchend', function(e){
+        var touchobj = e.changedTouches[0] // reference first touch point for this event
+        statusdiv.innerHTML = 'Status: touchend<br> Resting x coordinate: ' + touchobj.clientX + 'px'
+        e.preventDefault()
+    }, false)
+ 
+}, false)
+ 
+</script>
+
+
+
+
+
+
+
+<div id='messagesDiv'></div>
+
+<input type='text' id='nameInput' placeholder='Name'>
+<input type='text' id='messageInput' placeholder='Message...'>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <form action="">
+         <input type="button" id="myButton" value="Add"/>
+
+<script type='text/javascript'>
+var myBtn = document.getElementById('myButton');
+
+  //add event listener
+  myBtn.addEventListener('click', function(event) {
+    var messagesRef = new Firebase('https://myphonegap-bec67.firebaseio.com/');
+ $('#messageInput').keypress(function (e) {
+    if (e.keyCode == 13) {
+      var name = $('#nameInput').val();
+      var text = $('#messageInput').val();
+      messagesRef.push({name:name, text:text});
+      $('#messageInput').val('');
+    }
+  });//close of key event
+
+
+ messagesRef.on('child_added', function (snapshot) {
+    var message = snapshot.val();
+    $('<div/>').text(message.text).prepend($('<em/>').text(message.name+': ')).appendTo($('#messagesDiv'));
+    $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+  });
+
+
+
+  });// close of add event listener
+
+</script>         
+    </form> 
+
+<!--
+ <script type='text/javascript'>
+
+  // Get a reference to the root of the chat data.
+  var messagesRef = new Firebase('https://myphonegap-bec67.firebaseio.com/');
+
+  // When the user presses enter on the message input, write the message to firebase.
+  $('#messageInput').keypress(function (e) {
+    if (e.keyCode == 13) {
+      var name = $('#nameInput').val();
+      var text = $('#messageInput').val();
+      messagesRef.push({name:name, text:text});
+      $('#messageInput').val('');
+    }
+  });
+  // Add a callback that is triggered for each chat message.
+  messagesRef.on('child_added', function (snapshot) {
+    var message = snapshot.val();
+    $('<div/>').text(message.text).prepend($('<em/>').text(message.name+': ')).appendTo($('#messagesDiv'));
+    $('#messagesDiv')[0].scrollTop = $('#messagesDiv')[0].scrollHeight;
+  });
+
+</script>
+-->
+</body>
+</html>
+
+ 
